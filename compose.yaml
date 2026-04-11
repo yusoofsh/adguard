@@ -1,37 +1,27 @@
 services:
   adguard:
     image: adguard/adguardhome:latest
-    restart: unless-stopped
     volumes:
-      - conf:/opt/adguardhome/conf
-      - work:/opt/adguardhome/work
-      - tls:/opt/adguardhome/tls
+      - adguard-conf:/opt/adguardhome/conf
+      - adguard-work:/opt/adguardhome/work
     x-caddy: |
       adguard.yusoofsh.cloud {
-        reverse_proxy {{upstreams 80}} {
-          header_up Host {host}
-          header_up X-Real-IP {remote}
-          header_up X-Forwarded-For {remote}
-          header_up X-Forwarded-Proto {scheme}
-        }
-        log
+        reverse_proxy {{upstreams 80}}
       }
-      doh.yusoofsh.cloud {
+      dnsoh.yusoofsh.cloud {
         reverse_proxy {{upstreams 443}} {
           transport http {
             tls
             tls_insecure_skip_verify
-            tls_server_name doh.yusoofsh.cloud
+            tls_server_name dnsoh.yusoofsh.cloud
           }
           import common_proxy
         }
-        log
       }
     x-ports:
       - 853:853/tcp@host
       - 853:853/udp@host
 
 volumes:
-  conf:
-  work:
-  tls:
+  adguard-conf:
+  adguard-work:
