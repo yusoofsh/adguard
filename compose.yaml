@@ -36,8 +36,6 @@ services:
         }
       }
     x-ports:
-      - 53:53/tcp@host
-      - 53:53/udp@host
       - 853:853/tcp@host
       - 853:853/udp@host
   lego:
