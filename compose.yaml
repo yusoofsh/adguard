@@ -9,6 +9,13 @@ services:
       - adguard-tls:/opt/adguardhome/tls
     x-caddy: |
       adguard.yusoofsh.cloud {
+        redir / /home 302
+        handle_path /home* {
+          reverse_proxy {{upstreams 80}}
+        }
+        handle {
+          reverse_proxy {{upstreams 80}}
+        }
         handle /dns-query* {
           reverse_proxy {{upstreams 80}} {
             header_up Host {host}
@@ -17,16 +24,6 @@ services:
             header_up X-Forwarded-Proto {scheme}
           }
         }
-        handle_path /home* {
-          reverse_proxy {{upstreams 80}}
-        }
-        handle {
-          reverse_proxy {{upstreams 80}}
-        }
-        @root {
-          path /
-        }
-        redir @root /home 301
       }
       *.adguard.yusoofsh.cloud {
         handle /dns-query* {
@@ -39,6 +36,8 @@ services:
         }
       }
     x-ports:
+      - 53:53/tcp@host
+      - 53:53/udp@host
       - 853:853/tcp@host
       - 853:853/udp@host
   lego:
