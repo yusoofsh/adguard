@@ -1,27 +1,59 @@
 services:
   adguard:
-    image: adguard/adguardhome:latest
+    image: adguard/adguardhome:beta
+    cap_add:
+      - NET_ADMIN
     volumes:
       - adguard-conf:/opt/adguardhome/conf
       - adguard-work:/opt/adguardhome/work
+      - adguard-tls:/opt/adguardhome/tls
     x-caddy: |
       adguard.yusoofsh.cloud {
-        reverse_proxy {{upstreams 80}}
-      }
-      dnsoh.yusoofsh.cloud {
-        reverse_proxy {{upstreams 443}} {
-          transport http {
-            tls
-            tls_insecure_skip_verify
-            tls_server_name dnsoh.yusoofsh.cloud
+        handle /dns-query* {
+          reverse_proxy {{upstreams 80}} {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
           }
-          import common_proxy
+        }
+        handle_path /home* {
+          reverse_proxy {{upstreams 80}}
+        }
+        handle {
+          reverse_proxy {{upstreams 80}}
+        }
+        @root {
+          path /
+        }
+        redir @root /home 301
+      }
+      *.adguard.yusoofsh.cloud {
+        handle /dns-query* {
+          reverse_proxy {{upstreams 80}} {
+            header_up Host {host}
+          }
+        }
+        handle {
+          reverse_proxy {{upstreams 80}}
         }
       }
     x-ports:
       - 853:853/tcp@host
       - 853:853/udp@host
+  lego:
+    image: brahmadev/acme-lego-cron:latest
+    env_file:
+      - .env
+    environment:
+      - EMAIL_ADDRESS
+      - PROVIDER=cloudflare
+      - CLOUDFLARE_DNS_API_TOKEN
+      - DOMAINS=adguard.yusoofsh.cloud;*.adguard.yusoofsh.cloud
+    volumes:
+      - adguard-tls:/letsencrypt
 
 volumes:
   adguard-conf:
   adguard-work:
+  adguard-tls:
