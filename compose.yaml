@@ -23,13 +23,13 @@ services:
         }
       }
       *.adguard.yusoofsh.cloud {
+        handle {
+          reverse_proxy {{upstreams 80}}
+        }
         handle /dns-query* {
           reverse_proxy {{upstreams 80}} {
             header_up Host {host}
           }
-        }
-        handle {
-          reverse_proxy {{upstreams 80}}
         }
       }
     x-ports:
