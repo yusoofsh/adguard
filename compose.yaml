@@ -8,7 +8,7 @@ services:
       - adguard-work:/opt/adguardhome/work
       - adguard-tls:/opt/adguardhome/tls
     x-caddy: |
-      adguard.yusoofsh.cloud {
+      dns.yusoofsh.id {
         redir / /home 302
         handle_path /home* {
           reverse_proxy {{upstreams 80}}
@@ -22,7 +22,7 @@ services:
           }
         }
       }
-      *.adguard.yusoofsh.cloud {
+      *.dns.yusoofsh.id {
         handle {
           reverse_proxy {{upstreams 80}}
         }
@@ -43,7 +43,7 @@ services:
       - EMAIL_ADDRESS
       - PROVIDER=cloudflare
       - CLOUDFLARE_DNS_API_TOKEN
-      - DOMAINS=adguard.yusoofsh.cloud;*.adguard.yusoofsh.cloud
+      - DOMAINS=dns.yusoofsh.id;*.dns.yusoofsh.id
     volumes:
       - adguard-tls:/letsencrypt
 
