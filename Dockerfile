@@ -60,7 +60,7 @@ RUN set -eux; \
 	OUT=/out/AdGuardHome \
 		sh ./scripts/make/go-build.sh; \
 	go version -m /out/AdGuardHome | grep -F 'go1.26.8'; \
-	go version -m /out/AdGuardHome | grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION}"
+	go version -m /out/AdGuardHome | awk -v expected="${X_CRYPTO_VERSION}" '$1 == "dep" && $2 == "golang.org/x/crypto" && $3 == expected { found = 1 } END { exit !found }'
 
 # Keep all official runtime metadata, ports, entrypoint, and administrative
 # capabilities.  Only the AdGuard executable and fixed OpenSSL packages are
