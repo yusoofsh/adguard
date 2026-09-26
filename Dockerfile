@@ -8,6 +8,7 @@ FROM golang:1.26.8-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
+ARG X_CRYPTO_VERSION=v0.56.0
 
 WORKDIR /src
 
@@ -29,6 +30,10 @@ RUN set -eux; \
 
 RUN set -eux; \
 	cd /src; \
+	go mod edit -require="golang.org/x/crypto@${X_CRYPTO_VERSION}"; \
+	go mod download "golang.org/x/crypto@${X_CRYPTO_VERSION}"; \
+	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION} h1:GUh5Ii4J5jtcseSMiRqr1jXCNHoxjeV9Fmekc2oLy6Y=" go.sum; \
+	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION}/go.mod h1:OMW5y6CY9l38uPLmxU6l6pwcXp1obtLo3e6gT7gQR2I=" go.sum; \
 	go mod download; \
 	targetos="${TARGETOS:-linux}"; \
 	targetarch="${TARGETARCH:-amd64}"; \
@@ -51,7 +56,8 @@ RUN set -eux; \
 	SOURCE_DATE_EPOCH=1785409946 \
 	OUT=/out/AdGuardHome \
 		sh ./scripts/make/go-build.sh; \
-	go version -m /out/AdGuardHome | grep -F 'go1.26.8'
+	go version -m /out/AdGuardHome | grep -F 'go1.26.8'; \
+	go version -m /out/AdGuardHome | grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION}"
 
 # Keep all official runtime metadata, ports, entrypoint, and administrative
 # capabilities.  Only the AdGuard executable and fixed OpenSSL packages are
