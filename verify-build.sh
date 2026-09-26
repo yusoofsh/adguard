@@ -14,9 +14,13 @@ grep -F 'a8be9b5e9ce0949a85456e4342bc5fdb8eb11a96' "$dockerfile" >/dev/null
 grep -F 'VERSION=v0.108.0-b.90' "$dockerfile" >/dev/null
 grep -F 'SOURCE_DATE_EPOCH=1785409946' "$dockerfile" >/dev/null
 grep -F 'ARG X_CRYPTO_VERSION=v0.56.0' "$dockerfile" >/dev/null
+grep -F 'ARG X_TEXT_VERSION=v0.41.0' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/crypto ${X_CRYPTO_VERSION}' "$dockerfile" >/dev/null
 grep -F 'GUh5Ii4J5jtcseSMiRqr1jXCNHoxjeV9Fmekc2oLy6Y=' "$dockerfile" >/dev/null
 grep -F 'OMW5y6CY9l38uPLmxU6l6pwcXp1obtLo3e6gT7gQR2I=' "$dockerfile" >/dev/null
+grep -F 'golang.org/x/text ${X_TEXT_VERSION}' "$dockerfile" >/dev/null
+grep -F 'vz/seA0lnX87Othu2f/0L24RcgrXD9/YFTSuGjj3rH8=' "$dockerfile" >/dev/null
+grep -F 'jvf1O8ajNzZqhSrQBPbutR/EB83Cc0CFrezNQIwbb5M=' "$dockerfile" >/dev/null
 grep -F '23e7c196830313e25020b7df8f692d294ba6dd82b568fe99355cf54550c14826' "$dockerfile" >/dev/null
 grep -F '9eeb662861e301ade16b47d820bc6fc9097c2e43bcf982368a800d0f765dc2d2' "$dockerfile" >/dev/null
 grep -F "libcrypto3=3.5.8-r0" "$dockerfile" >/dev/null

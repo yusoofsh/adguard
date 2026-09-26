@@ -9,6 +9,7 @@ ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
 ARG X_CRYPTO_VERSION=v0.56.0
+ARG X_TEXT_VERSION=v0.41.0
 
 WORKDIR /src
 
@@ -31,10 +32,12 @@ RUN set -eux; \
 RUN set -eux; \
 	cd /src; \
 	go mod edit -require="golang.org/x/crypto@${X_CRYPTO_VERSION}"; \
-	go mod download "golang.org/x/crypto@${X_CRYPTO_VERSION}"; \
+	go mod edit -require="golang.org/x/text@${X_TEXT_VERSION}"; \
+	go mod download all; \
 	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION} h1:GUh5Ii4J5jtcseSMiRqr1jXCNHoxjeV9Fmekc2oLy6Y=" go.sum; \
 	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION}/go.mod h1:OMW5y6CY9l38uPLmxU6l6pwcXp1obtLo3e6gT7gQR2I=" go.sum; \
-	go mod download; \
+	grep -F "golang.org/x/text ${X_TEXT_VERSION} h1:vz/seA0lnX87Othu2f/0L24RcgrXD9/YFTSuGjj3rH8=" go.sum; \
+	grep -F "golang.org/x/text ${X_TEXT_VERSION}/go.mod h1:jvf1O8ajNzZqhSrQBPbutR/EB83Cc0CFrezNQIwbb5M=" go.sum; \
 	targetos="${TARGETOS:-linux}"; \
 	targetarch="${TARGETARCH:-amd64}"; \
 	targetvariant="${TARGETVARIANT:-}"; \
