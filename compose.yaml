@@ -36,7 +36,7 @@ services:
       - 853:853/tcp@host
       - 853:853/udp@host
   lego:
-    image: brahmadev/acme-lego-cron:latest
+    image: ghcr.io/yusoofsh/acme-lego-cron:latest
     env_file:
       - .env
     environment:

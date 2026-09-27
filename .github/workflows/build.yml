@@ -39,7 +39,9 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/yusoofsh/adguardhome:security-sha-${{ github.sha }}
+          tags: |
+            ghcr.io/yusoofsh/adguardhome:latest
+            ghcr.io/yusoofsh/adguardhome:security-sha-${{ github.sha }}
           provenance: mode=max
           sbom: true
           cache-from: type=gha,scope=adguard
