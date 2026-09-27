@@ -9,12 +9,14 @@ RUN echo '89f2630904a97d06b66c1e31f349f6f6dcef35e222a2b19f58a7ba07e108ac3a  /tmp
 	&& mkdir -p /src \
 	&& tar -xzf /tmp/adguardhome-source.tar.gz --strip-components=1 -C /src
 
-FROM node:24-alpine@sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1 AS frontend
+FROM oven/bun:1-alpine@sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f AS frontend
 
 COPY --from=source /src/client_v2 /src/client_v2
 WORKDIR /src/client_v2
-RUN npm ci --ignore-scripts \
-	&& npm run build-prod
+RUN test "$(sha256sum package-lock.json | awk '{print $1}')" = \
+	271ad1ba897727ac1ae870c349873b4ef314a64c9f1ec4ab93a68832aec96ea9 \
+	&& bun install --no-save \
+	&& bun run build-prod
 
 FROM golang:1.26.8-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS builder
 
