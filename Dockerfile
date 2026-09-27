@@ -12,6 +12,7 @@ RUN echo '89f2630904a97d06b66c1e31f349f6f6dcef35e222a2b19f58a7ba07e108ac3a  /tmp
 FROM oven/bun:1-alpine@sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f AS frontend
 
 COPY --from=source /src/client_v2 /src/client_v2
+COPY --from=source /src/.twosky.json /src/.twosky.json
 WORKDIR /src/client_v2
 RUN test "$(sha256sum package-lock.json | awk '{print $1}')" = \
 	271ad1ba897727ac1ae870c349873b4ef314a64c9f1ec4ab93a68832aec96ea9 \
