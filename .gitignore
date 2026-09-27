@@ -1,0 +1,8 @@
+.env
+deploy/lighthouse/.env
+deploy/lighthouse/adguard/.env
+deploy/lighthouse/adguard/conf/
+deploy/lighthouse/adguard/tls/
+deploy/lighthouse/adguard/work/
+*.log
+

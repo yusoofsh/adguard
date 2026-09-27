@@ -1,0 +1,73 @@
+services:
+  home:
+    image: ghcr.io/yusoofsh/adguardhome@sha256:620dad10b79ff96bd9adc9bc4ca909b0c54bf56cac7a292989ee6a65eec8e15f
+    restart: always
+    mem_limit: 768m
+    memswap_limit: 896m
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD-SHELL", "nslookup yusoofsh.id 127.0.0.1 >/dev/null 2>&1 && wget -q --spider http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - caddy
+    cap_add:
+      - NET_ADMIN
+    ports:
+    - 53:53/tcp
+    - 53:53/udp
+    - 853:853/tcp
+    volumes:
+      - ./conf:/opt/adguardhome/conf
+      - ./tls:/opt/adguardhome/tls
+      - work:/opt/adguardhome/work
+    labels:
+      caddy_0: adguard.yusoofsh.id
+      caddy_0.@doh.path: /dns-query /dns-query/*
+      caddy_0.@vpn.remote_ip: 100.100.0.0/16
+      caddy_0.route.0_crowdsec: ""
+      caddy_0.route.1_appsec: ""
+      caddy_0.route.2_reverse_proxy: "@doh {{upstreams 80}}"
+      caddy_0.route.3_reverse_proxy: "@vpn {{upstreams 80}}"
+      caddy_0.route.4_respond: "404"
+      caddy_1: "*.dns.yusoofsh.id"
+      caddy_1.@doh.path: /dns-query /dns-query/*
+      caddy_1.@vpn.remote_ip: 100.100.0.0/16
+      caddy_1.route.0_crowdsec: ""
+      caddy_1.route.1_appsec: ""
+      caddy_1.route.2_reverse_proxy: "@doh {{upstreams 80}}"
+      caddy_1.route.3_reverse_proxy: "@vpn {{upstreams 80}}"
+      caddy_1.route.4_respond: "404"
+  cert:
+    image: ghcr.io/yusoofsh/acme-lego-cron@sha256:2f9dae34ae5cd016712f9db97ca3cc70b4ad72d8b40e8a8d548aed10e427432a
+    restart: always
+    mem_limit: 128m
+    memswap_limit: 160m
+    pids_limit: 64
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f crond || pgrep -f run.sh"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    env_file:
+      - .env
+    environment:
+      - EMAIL_ADDRESS
+      - PROVIDER=cloudflare
+      - CLOUDFLARE_DNS_API_TOKEN
+      - DOMAINS=dns.yusoofsh.id;*.dns.yusoofsh.id
+      - DNS_TIMEOUT=300
+      - LEGO_ARGS=--dns.resolvers 1.1.1.1:53
+    volumes:
+    - ./tls:/letsencrypt
+    - ./hook.sh:/app/hook.sh:ro
+    pid: service:home
+volumes:
+  work:
+
+networks:
+  caddy:
+    external: true
