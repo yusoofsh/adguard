@@ -73,7 +73,8 @@ ARG VERSION=v0.108.0-b.90
 
 LABEL org.opencontainers.image.created="2026-07-30T11:12:26Z" \
 	org.opencontainers.image.revision="${SOURCE_COMMIT}" \
-	org.opencontainers.image.version="${VERSION}"
+	org.opencontainers.image.version="${VERSION}" \
+	org.opencontainers.image.source="https://github.com/yusoofsh/adguard"
 
 # The official digest currently carries Alpine 3.23.5's OpenSSL 3.5.7-r0.
 # Pin the compatible 3.5.8-r0 packages that contain CVE-2026-14456's fix.
