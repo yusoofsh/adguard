@@ -29,6 +29,6 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish upstream image
         env:
-          SOURCE_IMAGE: adguard/adguardhome:latest
+          SOURCE_IMAGE: adguard/adguardhome:edge
           TARGET_IMAGE: ghcr.io/${{ github.repository_owner }}/adguardhome:latest
         run: docker buildx imagetools create --tag "$TARGET_IMAGE" "$SOURCE_IMAGE"
