@@ -10,7 +10,7 @@ dockerfile="$root/Dockerfile"
 
 grep -F 'FROM golang:1.26.8-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS builder' "$dockerfile" >/dev/null
 grep -F 'FROM adguard/adguardhome@sha256:2b77703b27730d5c0c7045fcd6c98834169cd5c69af5f86a43947425f2d367fd AS runtime' "$dockerfile" >/dev/null
-grep -F 'a8be9b5e9ce0949a85456e4342bc5fdb8eb11a96' "$dockerfile" >/dev/null
+grep -F 'b08c2e5418081888269d5009f01dfbaa8c8af253' "$dockerfile" >/dev/null
 grep -F 'VERSION=v0.0.0-dev.0+b08c2e5' "$dockerfile" >/dev/null
 grep -F 'SOURCE_DATE_EPOCH=1790344104' "$dockerfile" >/dev/null
 grep -F 'ARG X_CRYPTO_VERSION=v0.56.0' "$dockerfile" >/dev/null
@@ -21,8 +21,8 @@ grep -F 'OMW5y6CY9l38uPLmxU6l6pwcXp1obtLo3e6gT7gQR2I=' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/text ${X_TEXT_VERSION}' "$dockerfile" >/dev/null
 grep -F 'vz/seA0lnX87Othu2f/0L24RcgrXD9/YFTSuGjj3rH8=' "$dockerfile" >/dev/null
 grep -F 'jvf1O8ajNzZqhSrQBPbutR/EB83Cc0CFrezNQIwbb5M=' "$dockerfile" >/dev/null
-grep -F '23e7c196830313e25020b7df8f692d294ba6dd82b568fe99355cf54550c14826' "$dockerfile" >/dev/null
-grep -F '9eeb662861e301ade16b47d820bc6fc9097c2e43bcf982368a800d0f765dc2d2' "$dockerfile" >/dev/null
+grep -F '89f2630904a97d06b66c1e31f349f6f6dcef35e222a2b19f58a7ba07e108ac3a' "$dockerfile" >/dev/null
+grep -F 'sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f' "$dockerfile" >/dev/null
 grep -F "libcrypto3=3.5.8-r0" "$dockerfile" >/dev/null
 grep -F "libssl3=3.5.8-r0" "$dockerfile" >/dev/null
 grep -F 'scripts/make/go-build.sh' "$dockerfile" >/dev/null
@@ -31,9 +31,8 @@ grep -F 'COPY --from=builder --chown=nobody:nogroup --chmod=0755' "$dockerfile" 
 grep -F 'ENTRYPOINT ["/opt/adguardhome/AdGuardHome"]' "$dockerfile" >/dev/null
 grep -F 'CMD ["--no-check-update", "-c", "/opt/adguardhome/conf/AdGuardHome.yaml", "-w", "/opt/adguardhome/work"]' "$dockerfile" >/dev/null
 
-if grep -Ev '^[[:space:]]*#' "$dockerfile" | grep -Eiq '(^|[^a-z])(npm|node)([^a-z]|$)'; then
-	echo 'frontend must remain the checksum-verified release archive' >&2
-	exit 1
-fi
+grep -F 'bun install --no-save' "$dockerfile" >/dev/null
+grep -F 'bun run build-prod' "$dockerfile" >/dev/null
+grep -F 'COPY --from=frontend /src/build/static /opt/adguardhome/build/static' "$dockerfile" >/dev/null
 
 echo 'AdGuard build manifest checks passed.'
