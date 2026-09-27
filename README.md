@@ -1,9 +1,10 @@
 # AdGuard Home
 
 This repository contains the hardened AdGuard Home image build and the source
-Compose definition. The image is built from pinned upstream source and runtime
-digests, with verification performed in GitHub Actions before publication to
-`ghcr.io/yusoofsh/adguardhome`.
+Compose definition. The image is built from a pinned commit of upstream's
+default `master` branch, including the matching frontend built with `npm ci`,
+and runtime digests. GitHub Actions verifies the complete image before
+publication to `ghcr.io/yusoofsh/adguardhome`.
 
 ## Lighthouse deployment
 
@@ -22,4 +23,3 @@ management before deploying.
 ```sh
 ./verify-build.sh
 ```
-

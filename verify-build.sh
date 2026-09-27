@@ -11,8 +11,8 @@ dockerfile="$root/Dockerfile"
 grep -F 'FROM golang:1.26.8-alpine@sha256:8ac98ca534ac3f51e1f420a1dd2c15e74c75cfa0f23f3ad27eb5d7236c349a0c AS builder' "$dockerfile" >/dev/null
 grep -F 'FROM adguard/adguardhome@sha256:2b77703b27730d5c0c7045fcd6c98834169cd5c69af5f86a43947425f2d367fd AS runtime' "$dockerfile" >/dev/null
 grep -F 'a8be9b5e9ce0949a85456e4342bc5fdb8eb11a96' "$dockerfile" >/dev/null
-grep -F 'VERSION=v0.108.0-b.90' "$dockerfile" >/dev/null
-grep -F 'SOURCE_DATE_EPOCH=1785409946' "$dockerfile" >/dev/null
+grep -F 'VERSION=v0.0.0-dev.0+b08c2e5' "$dockerfile" >/dev/null
+grep -F 'SOURCE_DATE_EPOCH=1790344104' "$dockerfile" >/dev/null
 grep -F 'ARG X_CRYPTO_VERSION=v0.56.0' "$dockerfile" >/dev/null
 grep -F 'ARG X_TEXT_VERSION=v0.41.0' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/crypto ${X_CRYPTO_VERSION}' "$dockerfile" >/dev/null

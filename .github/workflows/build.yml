@@ -52,7 +52,7 @@ jobs:
         run: |
           set -eu
           docker pull "$IMAGE"
-          docker run --rm "$IMAGE" --version | grep -F 'v0.108.0-b.90'
+          docker run --rm "$IMAGE" --version | grep -F 'v0.0.0-dev.0+b08c2e5'
           docker run --rm --entrypoint sh "$IMAGE" -c 'getcap /opt/adguardhome/AdGuardHome' | grep -F cap_net_bind_service
           docker image inspect "$IMAGE" --format '{{json .Config.Entrypoint}}' | grep -F /opt/adguardhome/AdGuardHome
           printf 'Verified candidate: `%s`\n' "$IMAGE" >> "$GITHUB_STEP_SUMMARY"
