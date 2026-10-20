@@ -52,15 +52,25 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    networks:
+      - caddy
     env_file:
       - .env
     environment:
       - EMAIL_ADDRESS
       - PROVIDER=cloudflare
       - CLOUDFLARE_DNS_API_TOKEN
-      - DOMAINS=dns.yusoofsh.id;*.dns.yusoofsh.id
+      # The IP SAN lets AdGuard advertise DNS-over-TLS via DDR. Let's Encrypt
+      # issues IP certificates only on the 160-hour shortlived profile and only
+      # via HTTP-01, which Caddy relays from public TCP 80 to lego below.
+      - DOMAINS=dns.yusoofsh.id;*.dns.yusoofsh.id;43.157.242.223
       - DNS_TIMEOUT=300
-      - LEGO_ARGS=--dns.resolvers 1.1.1.1:53
+      - LEGO_ARGS=--dns.resolvers 1.1.1.1:53 --http --http.address :8402 --profile shortlived
+    labels:
+      caddy_0: "http://43.157.242.223, http://dns.yusoofsh.id"
+      caddy_0.@acme.path: /.well-known/acme-challenge/*
+      caddy_0.route.0_reverse_proxy: "@acme {{upstreams 8402}}"
+      caddy_0.route.1_redir: "https://{host}{uri} 308"
     volumes:
     - ./tls:/letsencrypt
     - ./hook.sh:/app/hook.sh:ro
