@@ -1,0 +1,35 @@
+diff --git a/client_v2/src/common/ui/Banners/Banners.tsx b/client_v2/src/common/ui/Banners/Banners.tsx
+index 12b4982..d3a96c5 100644
+--- a/client_v2/src/common/ui/Banners/Banners.tsx
++++ b/client_v2/src/common/ui/Banners/Banners.tsx
+@@ -21,6 +21,20 @@ import s from './Banners.module.pcss';
+ 
+ const TLS_EXPIRY_WARNING_MS = 30 * 24 * 60 * 60 * 1000;
+ 
++/**
++ * Warn once less than a third of the certificate's lifetime is left, capped at
++ * 30 days, so short-lived certificates (for example Let's Encrypt's 160-hour
++ * profile) do not keep the banner up between routine renewals.
++ */
++const tlsExpiryWarningMs = (notBefore: number, notAfter: number): number => {
++    const lifetime = notAfter - notBefore;
++    if (!(lifetime > 0)) {
++        return TLS_EXPIRY_WARNING_MS;
++    }
++
++    return Math.min(TLS_EXPIRY_WARNING_MS, lifetime / 3);
++};
++
+ type Props = {
+     forceBanner?: BannerSpec;
+ };
+@@ -45,7 +59,8 @@ export const Banners = (props: Props) => {
+                 if (Date.now() > expiry) {
+                     return { type: 'tls_expired' };
+                 }
+-                if (Date.now() > expiry - TLS_EXPIRY_WARNING_MS) {
++                const issued = new Date(encryptionState.not_before ?? '').getTime();
++                if (Date.now() > expiry - tlsExpiryWarningMs(issued, expiry)) {
+                     return { type: 'tls_expiring' };
+                 }
+             }

@@ -31,6 +31,10 @@ grep -F 'COPY --from=builder --chown=nobody:nogroup --chmod=0755' "$dockerfile" 
 grep -F 'ENTRYPOINT ["/opt/adguardhome/AdGuardHome"]' "$dockerfile" >/dev/null
 grep -F 'CMD ["--no-check-update", "-c", "/opt/adguardhome/conf/AdGuardHome.yaml", "-w", "/opt/adguardhome/work"]' "$dockerfile" >/dev/null
 
+grep -F 'COPY patches/ /tmp/patches/' "$dockerfile" >/dev/null
+grep -F 'patch -p1 -i "$p" || exit 1' "$dockerfile" >/dev/null
+test -s "$root/patches/client_v2-tls-expiry-window.patch"
+
 grep -F 'bun install --no-save' "$dockerfile" >/dev/null
 grep -F 'bun run build-prod' "$dockerfile" >/dev/null
 grep -F 'COPY --from=frontend /src/build/static /opt/adguardhome/build/static' "$dockerfile" >/dev/null
