@@ -5,9 +5,11 @@
 FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0 AS source
 
 ADD https://github.com/AdguardTeam/AdGuardHome/archive/fb7774fa5ca1da62e0bc5b09e5e5f408ed1c8514.tar.gz /tmp/adguardhome-source.tar.gz
-# Local source patches; a hunk that no longer applies fails the build.
+# Local source patches; a hunk that no longer applies fails the build.  Alpine's
+# busybox has no patch applet, so this throwaway stage installs GNU patch.
 COPY patches/ /tmp/patches/
-RUN echo 'f63b7e56992ac1a5d0dd5cad923af9a7f373db37b1771184e96ca52579af563a  /tmp/adguardhome-source.tar.gz' | sha256sum -c - \
+RUN apk add --no-cache patch \
+	&& echo 'f63b7e56992ac1a5d0dd5cad923af9a7f373db37b1771184e96ca52579af563a  /tmp/adguardhome-source.tar.gz' | sha256sum -c - \
 	&& mkdir -p /src \
 	&& tar -xzf /tmp/adguardhome-source.tar.gz --strip-components=1 -C /src \
 	&& cd /src \

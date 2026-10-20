@@ -32,6 +32,7 @@ grep -F 'ENTRYPOINT ["/opt/adguardhome/AdGuardHome"]' "$dockerfile" >/dev/null
 grep -F 'CMD ["--no-check-update", "-c", "/opt/adguardhome/conf/AdGuardHome.yaml", "-w", "/opt/adguardhome/work"]' "$dockerfile" >/dev/null
 
 grep -F 'COPY patches/ /tmp/patches/' "$dockerfile" >/dev/null
+grep -F 'RUN apk add --no-cache patch' "$dockerfile" >/dev/null
 grep -F 'patch -p1 -i "$p" || exit 1' "$dockerfile" >/dev/null
 test -s "$root/patches/client_v2-tls-expiry-window.patch"
 
