@@ -1,6 +1,6 @@
 services:
   home:
-    image: ghcr.io/yusoofsh/adguardhome:latest
+    image: ghcr.io/yusoofsh/adguardhome:2026.11.09-ys.1
     restart: always
     mem_limit: 768m
     memswap_limit: 896m
@@ -41,7 +41,7 @@ services:
       caddy_1.route.3_reverse_proxy: "@vpn {{upstreams 80}}"
       caddy_1.route.4_respond: "404"
   cert:
-    image: ghcr.io/yusoofsh/acme-lego-cron:latest
+    image: ghcr.io/yusoofsh/acme-lego-cron:2026.11.09-ys.1
     restart: always
     mem_limit: 128m
     memswap_limit: 160m
