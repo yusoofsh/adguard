@@ -40,7 +40,7 @@ jobs:
         run: |
           set -euo pipefail
           version="${GITHUB_REF_NAME#v}"
-          digest_of() { docker buildx imagetools inspect "$1" 2>/dev/null | awk '/^Digest:/ { print $2; exit }'; }
+          digest_of() { { docker buildx imagetools inspect "$1" 2>/dev/null || true; } | awk '/^Digest:/ && !seen { seen = $2 } END { print seen }'; }
           source_digest="$(digest_of "$IMAGE:sha-$GITHUB_SHA")"
           [ -n "$source_digest" ] || { echo "No tested image exists for $GITHUB_SHA yet. Wait for the publish run on main, then re-run this job."; exit 1; }
           existing="$(digest_of "$IMAGE:$version")"
