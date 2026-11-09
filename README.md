@@ -28,3 +28,7 @@ management before deploying.
 ## Version tags
 
 Each published build also has a `sha-<commit>` tag. To give a build a version, push a git tag named `vYYYY.MM.DD-ys.N` on a commit of `main` whose image has finished publishing. The `Tag released image` workflow then adds `ghcr.io/yusoofsh/adguardhome:YYYY.MM.DD-ys.N` to that exact image. It never moves a version tag that already exists, and a tag push does not rebuild or redeploy anything. Pin deployments to the version tag.
+
+## Upstream
+
+This repository follows [AdguardTeam/AdGuardHome](https://github.com/AdguardTeam/AdGuardHome). The history of the upstream default branch is part of this repository, so GitHub shows how far this build is behind it. The merge keeps this repository's files unchanged. The Dockerfile pins the upstream commit that the image builds. To update, change the pin in a pull request, then merge the new upstream history with `git fetch upstream` and `git merge -s ours upstream/HEAD`.
