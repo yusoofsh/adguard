@@ -4,12 +4,12 @@
 
 FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0 AS source
 
-ADD https://github.com/AdguardTeam/AdGuardHome/archive/fb7774fa5ca1da62e0bc5b09e5e5f408ed1c8514.tar.gz /tmp/adguardhome-source.tar.gz
+ADD https://github.com/AdguardTeam/AdGuardHome/archive/f44bb2281384d72007c337dc7898fc36852e9b76.tar.gz /tmp/adguardhome-source.tar.gz
 # Local source patches; a hunk that no longer applies fails the build.  Alpine's
 # busybox has no patch applet, so this throwaway stage installs GNU patch.
 COPY patches/ /tmp/patches/
 RUN apk add --no-cache patch \
-	&& echo 'f63b7e56992ac1a5d0dd5cad923af9a7f373db37b1771184e96ca52579af563a  /tmp/adguardhome-source.tar.gz' | sha256sum -c - \
+	&& echo 'd4644b7e250e4481e92a3b839ba4e7721c08296c056c6edf2e452a2f14e9f521  /tmp/adguardhome-source.tar.gz' | sha256sum -c - \
 	&& mkdir -p /src \
 	&& tar -xzf /tmp/adguardhome-source.tar.gz --strip-components=1 -C /src \
 	&& cd /src \
@@ -25,7 +25,7 @@ RUN test "$(sha256sum package-lock.json | awk '{print $1}')" = \
 	&& bun install --no-save \
 	&& bun run build-prod
 
-FROM golang:1.27.2-alpine@sha256:f92b6ef800e499660581efdabdf25d9d817a9d124eaf900924f0504e7e27e12d AS builder
+FROM golang:1.27.3-alpine@sha256:fa3d596898d9f126af7c01d14ee7597bab3f39cccf392ef36b69fe77cd681f18 AS builder
 
 ARG TARGETOS
 ARG TARGETARCH
@@ -64,12 +64,12 @@ RUN set -eux; \
 	GOARM="$goarm" \
 	CGO_ENABLED=0 \
 	CHANNEL=beta \
-	VERSION=v0.0.0-dev.0+fb7774f \
-	REVISION=fb7774fa5ca1da62e0bc5b09e5e5f408ed1c8514 \
-	SOURCE_DATE_EPOCH=1792132736 \
+	VERSION=v0.0.0-dev.0+f44bb22 \
+	REVISION=f44bb2281384d72007c337dc7898fc36852e9b76 \
+	SOURCE_DATE_EPOCH=1794223430 \
 	OUT=/out/AdGuardHome \
 		sh ./scripts/make/go-build.sh; \
-	go version -m /out/AdGuardHome | grep -F 'go1.27.2'; \
+	go version -m /out/AdGuardHome | grep -F 'go1.27.3'; \
 	go version -m /out/AdGuardHome | awk -v expected="${X_CRYPTO_VERSION}" '$1 == "dep" && $2 == "golang.org/x/crypto" && $3 == expected { found = 1 } END { exit !found }'
 
 # Keep all official runtime metadata, ports, entrypoint, and administrative
@@ -77,11 +77,11 @@ RUN set -eux; \
 # source build, plus fixed OpenSSL packages.
 FROM adguard/adguardhome:edge@sha256:31e95c4d10bec79cfc595aa15dc44e27b5098a9cbf3499f0de0057e57b2e813d AS runtime
 
-ARG SOURCE_COMMIT=fb7774fa5ca1da62e0bc5b09e5e5f408ed1c8514
-ARG SOURCE_DATE_EPOCH=1792132736
-ARG VERSION=v0.0.0-dev.0+fb7774f
+ARG SOURCE_COMMIT=f44bb2281384d72007c337dc7898fc36852e9b76
+ARG SOURCE_DATE_EPOCH=1794223430
+ARG VERSION=v0.0.0-dev.0+f44bb22
 
-LABEL org.opencontainers.image.created="2026-10-16T06:38:56Z" \
+LABEL org.opencontainers.image.created="2026-11-09T11:23:50Z" \
 	org.opencontainers.image.revision="${SOURCE_COMMIT}" \
 	io.yusoofsh.upstream.revision="${SOURCE_COMMIT}" \
 	org.opencontainers.image.version="${VERSION}" \
