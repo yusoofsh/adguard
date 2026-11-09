@@ -27,29 +27,34 @@ jobs:
           version="${GITHUB_REF_NAME#v}"
           [[ "$version" =~ ^[0-9]{4}\.[0-9]{2}\.[0-9]{2}-ys\.[0-9]+$ ]] || { echo "Tag must look like v2026.11.09-ys.1"; exit 1; }
           git merge-base --is-ancestor "$GITHUB_SHA" origin/main || { echo "The tagged commit is not on main"; exit 1; }
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v4
-      - name: Log in to GHCR
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Point the version tag at the tested image
         shell: bash
+        env:
+          REGISTRY_USER: ${{ github.actor }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           version="${GITHUB_REF_NAME#v}"
-          digest_of() { { docker buildx imagetools inspect "$1" 2>/dev/null || true; } | awk '/^Digest:/ && !seen { seen = $2 } END { print seen }'; }
-          source_digest="$(digest_of "$IMAGE:sha-$GITHUB_SHA")"
+          name="${IMAGE#ghcr.io/}"
+          accept='application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.docker.distribution.manifest.v2+json'
+          token="$(curl -fsS -u "$REGISTRY_USER:$REGISTRY_TOKEN" "https://ghcr.io/token?service=ghcr.io&scope=repository:$name:pull,push" | jq -r .token)"
+          [ -n "$token" ] && [ "$token" != null ] || { echo "Could not get a registry token"; exit 1; }
+          digest_of() {
+            { curl -sS -o /dev/null -D - -H "Authorization: Bearer $token" -H "Accept: $accept" "https://ghcr.io/v2/$name/manifests/$1" || true; } |
+              awk -F': ' 'tolower($1) == "docker-content-digest" { gsub(/\r/, "", $2); print $2 }'
+          }
+          source_digest="$(digest_of "sha-$GITHUB_SHA")"
           [ -n "$source_digest" ] || { echo "No tested image exists for $GITHUB_SHA yet. Wait for the publish run on main, then re-run this job."; exit 1; }
-          existing="$(digest_of "$IMAGE:$version")"
+          existing="$(digest_of "$version")"
           if [ -n "$existing" ] && [ "$existing" != "$source_digest" ]; then
             echo "$version already points at a different image"
             exit 1
           fi
           if [ -z "$existing" ]; then
-            docker buildx imagetools create --tag "$IMAGE:$version" "$IMAGE@$source_digest"
+            curl -fsS -D headers.txt -o manifest.json -H "Authorization: Bearer $token" -H "Accept: $accept" "https://ghcr.io/v2/$name/manifests/$source_digest"
+            test "sha256:$(sha256sum manifest.json | cut -d' ' -f1)" = "$source_digest"
+            media_type="$(awk -F': ' 'tolower($1) == "content-type" { gsub(/\r/, "", $2); print $2 }' headers.txt)"
+            curl -fsS -X PUT -H "Authorization: Bearer $token" -H "Content-Type: $media_type" --data-binary @manifest.json "https://ghcr.io/v2/$name/manifests/$version" -o /dev/null
           fi
-          test "$(digest_of "$IMAGE:$version")" = "$source_digest"
+          test "$(digest_of "$version")" = "$source_digest"
           echo "$IMAGE:$version -> $source_digest"
