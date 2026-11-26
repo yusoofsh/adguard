@@ -1,6 +1,6 @@
 services:
   home:
-    image: ghcr.io/yusoofsh/adguardhome:2026.11.09-ys.2
+    image: ghcr.io/yusoofsh/adguardhome:2026.11.27-ys.1
     restart: always
     mem_limit: 768m
     memswap_limit: 896m
