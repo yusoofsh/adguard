@@ -8,11 +8,11 @@ set -eu
 root=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 dockerfile="$root/Dockerfile"
 
-grep -F 'FROM golang:1.27.3-alpine@sha256:fa3d596898d9f126af7c01d14ee7597bab3f39cccf392ef36b69fe77cd681f18 AS builder' "$dockerfile" >/dev/null
+grep -F 'FROM golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 AS builder' "$dockerfile" >/dev/null
 grep -F 'FROM adguard/adguardhome:edge@sha256:31e95c4d10bec79cfc595aa15dc44e27b5098a9cbf3499f0de0057e57b2e813d AS runtime' "$dockerfile" >/dev/null
-grep -F 'f44bb2281384d72007c337dc7898fc36852e9b76' "$dockerfile" >/dev/null
-grep -F 'VERSION=v0.0.0-dev.0+f44bb22' "$dockerfile" >/dev/null
-grep -F 'SOURCE_DATE_EPOCH=1794223430' "$dockerfile" >/dev/null
+grep -F 'de7a99006a62098f05065b787ef2992b18891060' "$dockerfile" >/dev/null
+grep -F 'VERSION=v0.0.0-dev.0+de7a990' "$dockerfile" >/dev/null
+grep -F 'SOURCE_DATE_EPOCH=1795618706' "$dockerfile" >/dev/null
 grep -F 'ARG X_CRYPTO_VERSION=v0.58.0' "$dockerfile" >/dev/null
 grep -F 'ARG X_TEXT_VERSION=v0.43.0' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/crypto ${X_CRYPTO_VERSION}' "$dockerfile" >/dev/null
@@ -21,7 +21,7 @@ grep -F 'Xh+kl5A+M0gMiWDytH2Hhr5Z7WbNCpv/eB/EFgfSk+w=' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/text ${X_TEXT_VERSION}' "$dockerfile" >/dev/null
 grep -F '1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=' "$dockerfile" >/dev/null
 grep -F 'hbSIYA/amXcRXTFSZqh8tWHEoqRvvbKPJ2uz/KU+a+s=' "$dockerfile" >/dev/null
-grep -F 'd4644b7e250e4481e92a3b839ba4e7721c08296c056c6edf2e452a2f14e9f521' "$dockerfile" >/dev/null
+grep -F 'e053460e811fb0e0b2ba1e1afc4ee08a15ee4c87c0d9d076afd3ecc846080e7f' "$dockerfile" >/dev/null
 grep -F 'sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f' "$dockerfile" >/dev/null
 grep -F "libcrypto3>=3.5.8-r0" "$dockerfile" >/dev/null
 grep -F "libssl3>=3.5.8-r0" "$dockerfile" >/dev/null
