@@ -30,8 +30,8 @@ FROM golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb910
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
-ARG X_CRYPTO_VERSION=v0.58.0
-ARG X_TEXT_VERSION=v0.43.0
+ARG X_CRYPTO_VERSION=v0.59.0
+ARG X_TEXT_VERSION=v0.44.0
 
 WORKDIR /src
 COPY --from=source /src /src
@@ -44,10 +44,10 @@ RUN set -eux; \
 	go mod edit -require="golang.org/x/crypto@${X_CRYPTO_VERSION}"; \
 	go mod edit -require="golang.org/x/text@${X_TEXT_VERSION}"; \
 	go mod download all; \
-	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION} h1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=" go.sum; \
-	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION}/go.mod h1:Xh+kl5A+M0gMiWDytH2Hhr5Z7WbNCpv/eB/EFgfSk+w=" go.sum; \
-	grep -F "golang.org/x/text ${X_TEXT_VERSION} h1:1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=" go.sum; \
-	grep -F "golang.org/x/text ${X_TEXT_VERSION}/go.mod h1:hbSIYA/amXcRXTFSZqh8tWHEoqRvvbKPJ2uz/KU+a+s=" go.sum; \
+	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION} h1:xS2jhqYbzNrpvkWP2YTDf4TJwBy3ykR03i8vFDxEc7c=" go.sum; \
+	grep -F "golang.org/x/crypto ${X_CRYPTO_VERSION}/go.mod h1:veDyUwATGs3c+vN3VfTbzViMGXeTBk3WyhBOkn+F/4U=" go.sum; \
+	grep -F "golang.org/x/text ${X_TEXT_VERSION} h1:YItdp/mQNGnsmrgpcdA5yQ3bnRxCfo/Tj/iByGW9GGo=" go.sum; \
+	grep -F "golang.org/x/text ${X_TEXT_VERSION}/go.mod h1:S4FR1waQ9LbjQTls97SyRjDaUUVkaM+cXwwuG/G+MwY=" go.sum; \
 	targetos="${TARGETOS:-linux}"; \
 	targetarch="${TARGETARCH:-amd64}"; \
 	targetvariant="${TARGETVARIANT:-}"; \

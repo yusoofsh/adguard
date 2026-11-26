@@ -13,14 +13,14 @@ grep -F 'FROM adguard/adguardhome:edge@sha256:31e95c4d10bec79cfc595aa15dc44e27b5
 grep -F 'de7a99006a62098f05065b787ef2992b18891060' "$dockerfile" >/dev/null
 grep -F 'VERSION=v0.0.0-dev.0+de7a990' "$dockerfile" >/dev/null
 grep -F 'SOURCE_DATE_EPOCH=1795618706' "$dockerfile" >/dev/null
-grep -F 'ARG X_CRYPTO_VERSION=v0.58.0' "$dockerfile" >/dev/null
-grep -F 'ARG X_TEXT_VERSION=v0.43.0' "$dockerfile" >/dev/null
+grep -F 'ARG X_CRYPTO_VERSION=v0.59.0' "$dockerfile" >/dev/null
+grep -F 'ARG X_TEXT_VERSION=v0.44.0' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/crypto ${X_CRYPTO_VERSION}' "$dockerfile" >/dev/null
-grep -F 'COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=' "$dockerfile" >/dev/null
-grep -F 'Xh+kl5A+M0gMiWDytH2Hhr5Z7WbNCpv/eB/EFgfSk+w=' "$dockerfile" >/dev/null
+grep -F 'xS2jhqYbzNrpvkWP2YTDf4TJwBy3ykR03i8vFDxEc7c=' "$dockerfile" >/dev/null
+grep -F 'veDyUwATGs3c+vN3VfTbzViMGXeTBk3WyhBOkn+F/4U=' "$dockerfile" >/dev/null
 grep -F 'golang.org/x/text ${X_TEXT_VERSION}' "$dockerfile" >/dev/null
-grep -F '1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=' "$dockerfile" >/dev/null
-grep -F 'hbSIYA/amXcRXTFSZqh8tWHEoqRvvbKPJ2uz/KU+a+s=' "$dockerfile" >/dev/null
+grep -F 'YItdp/mQNGnsmrgpcdA5yQ3bnRxCfo/Tj/iByGW9GGo=' "$dockerfile" >/dev/null
+grep -F 'S4FR1waQ9LbjQTls97SyRjDaUUVkaM+cXwwuG/G+MwY=' "$dockerfile" >/dev/null
 grep -F 'e053460e811fb0e0b2ba1e1afc4ee08a15ee4c87c0d9d076afd3ecc846080e7f' "$dockerfile" >/dev/null
 grep -F 'sha256:d888c0ae6c86d7866ff10c5aafdd9077b36aee6455b33dd270fb93c0dd5cef6f' "$dockerfile" >/dev/null
 grep -F "libcrypto3>=3.5.8-r0" "$dockerfile" >/dev/null
